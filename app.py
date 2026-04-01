@@ -5,6 +5,22 @@ import os
 
 # Configuración de la página
 st.set_page_config(page_title="Gastos del Hogar", page_icon="💰")
+
+# Establecer imagen de fondo
+st.markdown(
+"""
+<style>
+.stApp {
+background-image: url("IMG_8356.HEIC");
+background-size: cover;
+background-attachment: fixed;
+background-repeat: no-repeat;
+}
+</style>
+""",
+unsafe_allow_html=True
+)
+
 st.title("💰 Gastos del Hogar")
 
 # Autenticación simple (Gmail si está disponible en el entorno Streamlit Cloud)
@@ -33,6 +49,10 @@ if os.path.exists(ARCHIVO):
 else:
     df = pd.DataFrame(columns=["Fecha", "Descripcion", "Monto", "Persona", "Categoria", "CreadoPor", "CreadoEn", "ModificadoPor", "ModificadoEn"])
 
+# Actualizar nombres antiguos
+df["Persona"] = df["Persona"].replace("Mi pareja", "cami ❤️")
+df.to_csv(ARCHIVO, index=False)
+
 # Asegurar que existan las columnas de auditoría
 for col in ["CreadoPor", "CreadoEn", "ModificadoPor", "ModificadoEn"]:
     if col not in df.columns:
@@ -45,7 +65,7 @@ col1, col2 = st.columns(2)
 with col1:
     fecha = st.date_input("Fecha", value=date.today())
     monto = st.number_input("Monto ($)", min_value=0.0, step=100.0)
-    persona = st.selectbox("¿Quién pagó?", ["Yo", "Mi pareja"])
+    persona = st.selectbox("¿Quién pagó?", ["Yo", "cami ❤️"])
 
 with col2:
     descripcion = st.text_input("Descripción")
@@ -68,7 +88,7 @@ st.subheader("Historial de gastos")
 # Filtro de gastos
 st.markdown("**Filtrar gastos**")
 with st.expander("Opciones de filtro", expanded=True):
-    persona_filter = st.selectbox("Persona", options=["Todos", "Yo", "Mi pareja"], index=0)
+    persona_filter = st.selectbox("Persona", options=["Todos", "Yo", "cami ❤️"], index=0)
     categoria_filter = st.selectbox("Categoría", options=["Todas", "Comida", "Transporte", "Servicios", "Salud", "Entretenimiento", "Otro"], index=0)
     tex_filter = st.text_input("Texto en descripción")
     colf1, colf2 = st.columns(2)
